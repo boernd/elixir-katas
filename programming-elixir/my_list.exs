@@ -51,4 +51,71 @@ defmodule MyList do
   def span(a, b) do
     for i <- a..b, do: i
   end
+
+  def all?([], _), do: true
+  def all?(list) do
+    all?(list, fn a -> !!a end)
+  end
+  def all?([ head | tail ], fun) do
+    !!fun.(head) && all?(tail, fun)
+  end
+
+  def each([], _fun), do: :ok
+  def each([ head | tail ], fun) do
+    fun.(head)
+    each(tail, fun)
+  end
+
+  def filter([], _), do: []
+  def filter([ head | tail ], fun) do
+    if fun.(head) do
+      [ head | filter(tail, fun) ]
+    else
+      filter(tail, fun)
+    end
+  end
+
+  def split(list, n) when n >= 0 do
+    splitter([], list, n)
+  end
+  def split(list, n) when n < 0 do
+    splitter([], reverse(list), n)
+  end
+
+  defp splitter(a, [], _), do: {a, []}
+  defp splitter(a, b, 0), do: {a, b}
+  defp splitter(a, [ head | tail ], n) when n > 0 do
+   splitter(a ++ [head], tail, n - 1)
+  end
+  defp splitter(a, [ head | tail ], n) when n < 0 do
+   splitter(a ++ [head], tail, n + 1)
+  end
+  defp reverse([]), do: []
+  defp reverse([ head | tail ]), do: reverse(tail) ++ [head]
+
+  def take(list, n) do
+    taker(list, [], n)
+  end
+
+  defp taker([], b, _), do: b
+  defp taker(_, b, 0), do: b
+  defp taker([ head | tail ], b, n) do
+    taker(tail, b ++ [head], n - 1)
+  end
+
+  def flatten(list) do
+    flattener([], list)
+  end
+  defp flattener(a, []), do: a
+  defp flattener(a, [ h | t ]) do
+    if is_list(h) do
+      flattener(a, h ++ t)
+    else
+      flattener(a ++ [h], t)
+    end
+  end
+
+  def flatten2([]), do: []
+  def flatten2([ head | tail ]), do: flatten2(head) ++ flatten2(tail)
+  def flatten2(value), do: [value]
 end

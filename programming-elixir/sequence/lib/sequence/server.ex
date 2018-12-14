@@ -33,4 +33,12 @@ defmodule Sequence.Server do
     {:noreply, current_number + delta}
   end
 
+  def terminate(reason, state) do
+    IO.puts """
+    Terminating
+    ===========
+    Reason: #{inspect reason}
+    State: #{inspect state}
+    """
+  end
 end

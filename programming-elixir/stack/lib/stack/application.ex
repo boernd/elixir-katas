@@ -1,4 +1,4 @@
-defmodule Sequence.Application do
+defmodule Stack.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,13 +8,12 @@ defmodule Sequence.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      {Sequence.Stash, 123},
-      {Sequence.Server, nil},
+      {Stack.Server, ["eins", 2, true]},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :rest_for_one, name: Sequence.Supervisor]
+    opts = [strategy: :one_for_one, name: Stack.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
